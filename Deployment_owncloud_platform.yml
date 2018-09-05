@@ -1,0 +1,5 @@
+- name: Deploy platform for host Owncloud on AWS
+  hosts: localhost
+  tasks:
+    
+    
