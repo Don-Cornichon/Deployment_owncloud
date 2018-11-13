@@ -1,5 +1,19 @@
 - name: Deploy platform for host Owncloud on AWS
   hosts: localhost
   tasks:
-    
-    
+    - name: EC2 instance creation
+      ec2:
+        key_name: Owncloud
+        instance_tags: owncloud_v1 
+        instance_type: t2.micro
+        image: ami-0b59bfac6be064b78
+        wait: yes
+        group: webserver
+        vpc_subnet_id: subnet-29e63245
+        assign_public_ip: yes
+
+    - name: Stopping of the EC2 Owncloud instance
+      ec2:
+        key_name: Owncloud
+        instance_tags: owncloud_v1
+        state: stopped
