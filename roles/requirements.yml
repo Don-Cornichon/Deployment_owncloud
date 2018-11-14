@@ -1,0 +1,7 @@
+- src: https://github.com/Don-Cornichon/role_docker
+  version: master
+  name: role_docker
+
+- src: https://github.com/Don-Cornichon/role_owncloud
+  version: master
+  name: role_owncloud
