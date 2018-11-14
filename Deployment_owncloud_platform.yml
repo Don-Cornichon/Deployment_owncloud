@@ -1,19 +1,29 @@
-- name: Deploy of Owncloud with Docker
+- name: Deploy owncloud with Docker on Fedora
   hosts: localhost
   tasks:
-    - name: EC2 instance creation
-      ec2:
-        key_name: Owncloud
-        instance_tags: owncloud_v1 
-        instance_type: t2.micro
-        image: ami-0b59bfac6be064b78
-        wait: yes
-        group: webserver
-        vpc_subnet_id: subnet-29e63245
-        assign_public_ip: yes
+  - import_role:
+      name: "{{ item }}"
+    with_items:
+      - role_docker
+      - role_owncloud
 
-    - name: Stopping of the EC2 Owncloud instance
-      ec2:
-        key_name: Owncloud
-        instance_tags: owncloud_v1
-        state: stopped
+         
+#- name: Deploy of Owncloud with Docker
+#  hosts: localhost
+#  tasks:
+#    - name: EC2 instance creation
+#      ec2:
+#        key_name: Owncloud
+#        instance_tags: owncloud_v1 
+#        instance_type: t2.micro
+#        image: ami-0b59bfac6be064b78
+#        wait: yes
+#        group: webserver
+#        vpc_subnet_id: subnet-29e63245
+#        assign_public_ip: yes
+#
+#    - name: Stopping of the EC2 Owncloud instance
+#      ec2:
+#        key_name: Owncloud
+#        instance_tags: owncloud_v1
+#        state: stopped
