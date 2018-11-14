@@ -1,4 +1,4 @@
-- name: Deploy platform for host Owncloud on AWS
+- name: Deploy of Owncloud with Docker
   hosts: localhost
   tasks:
     - name: EC2 instance creation
