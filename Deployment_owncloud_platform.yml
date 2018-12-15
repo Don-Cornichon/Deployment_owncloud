@@ -1,13 +1,14 @@
 - name: Deploy owncloud with Docker on Fedora
   hosts: localhost
+  become: yes
   tasks:
-  - import_role:
+  - include_role:
       name: "{{ item }}"
-    with_items:
+    loop:
       - role_docker
       - role_owncloud
 
-         
+
 #- name: Deploy of Owncloud with Docker
 #  hosts: localhost
 #  tasks:
