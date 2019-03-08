@@ -1,5 +1,6 @@
 - name: Deploy owncloud with Docker on Fedora
   hosts: localhost
+  gather_facts: False
   become: yes
   tasks:
   - include_role:

@@ -1,0 +1,91 @@
+- name: Deploy owncloud with Docker on Fedora
+  hosts: localhost
+  gather_facts: False
+  become: yes
+  tasks:
+    - name: Create a security group for owncloud
+      ec2_group:
+        aws_access_key: "{{ aws_access }}"
+        aws_secret_key: "{{ aws_secret }}"
+        name: "owncloud"
+        #vpc_id: "vpc-owncloud"
+        description: The owncloud webserver security group
+        region: "us-east-1"
+        rules:
+            - proto: tcp
+              from_port: 22
+              to_port: 22
+              cidr_ip: 0.0.0.0/0
+            - proto: tcp
+              from_port: 80
+              to_port: 80
+              cidr_ip: 0.0.0.0/0
+            - proto: tcp
+              from_port: 443
+              to_port: 443
+              cidr_ip: 0.0.0.0/0
+            - proto: tcp
+              from_port: 8080
+              to_port: 8080
+              cidr_ip: 0.0.0.0/0
+        rules_egress:
+            - proto: all
+              cidr_ip: 0.0.0.0/0
+  
+    #- name: create VPC for owncloud
+      #ec2_vpc_net:
+        #aws_access_key: "{{ aws_access }}"
+        #aws_secret_key: "{{ aws_secret }}"
+        #name: "vpc-owncloud"
+        #cidr_block: "10.0.0.0/24"
+        #region: "us-east-1"
+        #state: present
+#
+    #- name: Create subnet for owncloud
+      #ec2_vpc_subnet:
+        #aws_access_key: "{{ aws_access }}"
+        #aws_secret_key: "{{ aws_secret }}"
+        #state: present
+        #vpc_id: "vpc-owncloud"
+        #cidr: 10.0.0.0/24
+        #region: "us-east-1"
+        #resource_tags:
+          #Name: Owncloud Subnet
+#  
+    - name: Create and start AWS VM with AWS Linux AMI
+      ec2:
+        aws_access_key: "{{ aws_access }}"
+        aws_secret_key: "{{ aws_secret }}"
+        key_name: "ec2_key"
+        instance_type: t2.micro
+        instance_ids: "owncloud"
+        instance_tags: '{ "key":"owncloud" }'
+        region: "us-east-1"
+        image: ami-0cd3dfa4e37921605
+        wait: yes
+        group: owncloud
+     #   vpc_subnet_id: "vpc-owncloud"
+      #  assign_public_ip: yes
+        state: present
+        volumes:
+          - device_name: /dev/sdb
+            volume_type: ssd
+            volume_size: 8
+    
+    - name: Create and start AWS VM with AWS Linux AMI
+      ec2:
+        instance_ids: "owncloud"
+        wait: yes
+        group: owncloud
+        vpc_subnet_id: subnet-owncloud
+        state: stopped
+
+#- name: Deploy owncloud with Docker on Fedora
+#  hosts: localhost
+#  become: yes
+#  tasks:
+#  - include_role:
+#      name: "{{ item }}"
+#    loop:
+#      - role_docker
+#      - role_owncloud

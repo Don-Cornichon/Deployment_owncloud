@@ -1,0 +1,13 @@
+- name: Ensure that docker and Docker-compose are well installed 
+  yum:
+    name: "{{ item }}"
+    state: present
+  loop:
+    - docker
+    - docker-compose
+
+- name: Ensure that Docker daemon is well started
+  service:
+    name: docker
+    state: started
+
